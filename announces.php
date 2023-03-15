@@ -558,60 +558,59 @@ if (isset($_SESSION['email'])) {
                     </div>
                     <div class="modal-body">
 
-                        <div id="modal_flex">
-                            <div class="form-box px-3">
-                                <div>
-                                    <img src="" style="width:20rem;height:15rem;" id="announces_Image"
-                                        alt="announce images">
+                       
+                            <div class="row justify-content-center mt-5 w-100 form-box px-3">
+                            <div class="col"> 
+                                    <img src="" style="width:20rem;height:15rem;" id="announces_Image" alt="announce images">
                                 </div>
 
-                                <div class="form-input">
+                                <div class="col form-input">
+                                    
+                                    <label for="Title" class="px-2 w-100">Title :</label>
+                                    <input type="text" id="announce_Title" readonly class="border-primary w-100">
+                                    
+                                    <label for="Rooms" class="px-2 w-100">Rooms :</label>
+                                    <input type="text" id="announce_Rooms" readonly class="border-primary w-100">
+                                    
+                                    <label for="Bathrooms" class="px-2 w-100">Bathrooms :</label>
+                                    <input type="text" id="announce_Bathrooms" readonly class="border-primary w-100">
 
-                                    <label for="Title">Title :</label>
-                                    <input type="text" id="announce_Title" readonly>
+                                    <label for="Country" class="px-2 w-100">Country :</label>
+                                    <input type="text" id="announce_Country" readonly class="border-primary w-100">
 
-                                    <label for="Rooms">Rooms :</label>
-                                    <input type="text" id="announce_Rooms" readonly>
+                                    <label for="City" class="px-2 w-100">City :</label>
+                                    <input type="text" id="announce_City" readonly class="border-primary w-100">
 
-                                    <label for="Bathrooms">Bathrooms :</label>
-                                    <input type="text" id="announce_Bathrooms" readonly>
-
-                                    <label for="Country">Country :</label>
-                                    <input type="text" id="announce_Country" readonly>
-
-                                    <label for="City">City :</label>
-                                    <input type="text" id="announce_City" readonly>
-
-                                    <label for="Type">Type :</label>
-                                    <input type="text" id="announce_Type" readonly>
+                                    <label for="Type" class="px-2 w-100">Type :</label>
+                                    <input type="text" id="announce_Type" readonly class="border-primary w-100">
 
                                 </div>
 
-                                <div class="form-input">
+                                <div class="col form-input">
 
-                                    <label for="Code_Postal">Code_Postal :</label>
-                                    <input type="text" id="announce_Postal" readonly>
+                                    <label for="Code_Postal" class="px-2 w-100">Code_Postal :</label>
+                                    <input type="text" id="announce_Postal" readonly class="border-primary w-100">
 
-                                    <label for="House_Number">House_Number :</label>
-                                    <input type="text" id="announce_House_Number" readonly>
+                                    <label for="House_Number" class="px-2 w-100">House_Number :</label>
+                                    <input type="text" id="announce_House_Number" readonly class="border-primary w-100">
 
-                                    <label for="House_Floor">House_Floor :</label>
-                                    <input type="text" id="announce_House_Floor" readonly>
+                                    <label for="House_Floor" class="px-2 w-100">House_Floor :</label>
+                                    <input type="text" id="announce_House_Floor" readonly class="border-primary w-100">
 
-                                    <label for="Area">Area :</label>
-                                    <input type="text" id="announce_Area" readonly>
+                                    <label for="Area" class="px-2 w-100">Area :</label>
+                                    <input type="text" id="announce_Area" readonly class="border-primary w-100">
 
-                                    <label for="Price">Price :</label>
-                                    <input type="text" id="announce_Price" readonly>
+                                    <label for="Price" class="px-2 w-100">Price :</label>
+                                    <input type="text" id="announce_Price" readonly class="border-primary w-100">
 
-                                    <label for="Category">Category :</label>
-                                    <input type="text" id="announce_Category" readonly>
+                                    <label for="Category" class="px-2 w-100">Category :</label>
+                                    <input type="text" id="announce_Category" readonly class="border-primary w-100">
 
                                     <h5></h5>
                                 </div>
 
                             </div>
-                        </div>
+                        
                         <div class="modal-footer">
                             <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
                                 Cancel
