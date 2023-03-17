@@ -39,5 +39,6 @@ if (isset($_SESSION['email'])) {
 
     // Execute the UPDATE statement
     $query->execute();
+    header("Location: profile.php");
 }
 ?>

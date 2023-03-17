@@ -2,30 +2,6 @@
 require 'connect.php';
 session_start();
 
-if (isset($_POST['add_announce_btn'])) {
-    if (isset($_FILES['image'])) {
-
-        $file_name = $_FILES['image']['name'];
-        $file_size = $_FILES['image']['size'];
-        $file_tmp = $_FILES['image']['tmp_name'];
-        $file_type = $_FILES['image']['type'];
-        $file_ext = strtolower(end(explode('.', $_FILES['image']['name'])));
-
-        $Title = mysqli_real_escape_string($conn, $_POST['Title']);
-        $Rooms = mysqli_real_escape_string($conn, $_POST['Rooms']);
-        $Amount = mysqli_real_escape_string($conn, $_POST['Amount']);
-        $City = mysqli_real_escape_string($conn, $_POST['City']);
-        $house_number = mysqli_real_escape_string($conn, $_POST['house_number']);
-        $Category = mysqli_real_escape_string($conn, $_POST['Category']);
-        $Area = mysqli_real_escape_string($conn, $_POST['Area']);
-        $Bathrooms = mysqli_real_escape_string($conn, $_POST['Bathrooms']);
-        $Country = mysqli_real_escape_string($conn, $_POST['Country']);
-        $code_postal = mysqli_real_escape_string($conn, $_POST['code_postal']);
-        $Type = mysqli_real_escape_string($conn, $_POST['Type']);
-
-    }
-}
-
 if (isset($_POST['add_client'])) {
 
     $fname = $_POST['fname'];
@@ -86,7 +62,6 @@ if (isset($_POST['login_into_account'])) {
 }
 if (isset($_SESSION['email'])) {
     header('Location:profile.php');
-    echo print_r($userIDArr);
 }
 
 ?>
