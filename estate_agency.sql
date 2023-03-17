@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2023 at 08:54 AM
+-- Generation Time: Mar 17, 2023 at 11:14 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -51,14 +51,13 @@ CREATE TABLE `announces` (
 --
 
 INSERT INTO `announces` (`Announce_ID`, `Client_ID`, `Title`, `Area`, `Rooms`, `Bathrooms`, `Price`, `Country`, `City`, `Code_Postal`, `House_Number`, `House_Floor`, `Type`, `Category`, `Publication_date`, `last_modification_date`) VALUES
-(1, 1, 'Private room in bed and breakf', 200, 2, 1, 2212, 'Morocco', 'Tanger', 91000, '2', '21', 'Appartment', 'Rent', '2023-02-08', '2023-02-15'),
-(2, 2, 'Private room in bed and breakf', 500, 3, 2, 43434, 'Morocco', 'Tanger', 91000, '2', '21', 'Villa', 'Rent', '2023-02-02', '2023-02-09'),
-(3, 3, 'dar dial outhman ', 200, 3, 2, 2212, 'spain', 'Tanger', 91000, '2', '21', 'Villa', 'Rent', '2023-02-09', '2023-02-16'),
-(4, 4, 'dar dial hamid', 230, 5, 3, 12345, 'Morocco', 'Tanger', 91000, '1', '1', 'Villa', 'Rent', '2023-02-21', '2023-02-22'),
-(5, 5, 'dar dial soufian', 521, 2, 2, 43434, 'Morocco', 'Tetouan', 12000, '2', '21', 'Appartment', 'Sell', '2023-02-22', '2023-02-27'),
-(6, 6, 'dar dial jalil betroji', 652, 6, 2, 234211, 'Morocco', 'Casablanca', 213111, '1', '1', 'Villa', 'Rent', '2023-02-21', '2023-02-22'),
-(7, 7, 'dar dial ibtissam ', 874, 8, 3, 197526, 'Morocco', 'Tetouan', 651321, '2', '21', 'Appartment', 'Sell', '2023-02-08', '2023-02-09'),
-(8, 8, 'Dar dial moumou', 332, 5, 3, 12345, 'Morocco', 'Tanger', 91000, '1', '1', 'Villa', 'Rent', '2023-02-07', '2023-02-22');
+(2, 18, 'Entire villa hosted by Vincent', 500, 3, 2, 43434, 'Morocco', 'Tanger', 91000, '2', '21', 'Villa', 'Rent', '2023-02-02', '2023-02-09'),
+(3, 18, 'villa in casablanca ', 200, 3, 2, 2212, 'spain', 'Tanger', 91000, '2', '21', 'Villa', 'Rent', '2023-02-09', '2023-02-16'),
+(4, 18, 'best designed tripe house', 230, 5, 3, 12345, 'Morocco', 'Tanger', 91000, '1', '1', 'Villa', 'Rent', '2023-02-21', '2023-02-22'),
+(5, 18, 'best designed house in tanger', 521, 2, 2, 43434, 'Morocco', 'Tetouan', 12000, '2', '21', 'Appartment', 'Sell', '2023-02-22', '2023-02-27'),
+(6, 18, 'A Luxury house in chefchaouen', 652, 6, 2, 234211, 'Morocco', 'Casablanca', 213111, '1', '1', 'Villa', 'Rent', '2023-02-21', '2023-02-22'),
+(7, 8, 'luxury house in tetouan ', 874, 8, 3, 197526, 'Morocco', 'Tetouan', 651321, '2', '21', 'Appartment', 'Sell', '2023-02-08', '2023-02-09'),
+(8, 18, 'Villa in rabat for sell', 332, 5, 3, 12345, 'Morocco', 'Tanger', 91000, '1', '1', 'Villa', 'Rent', '2023-02-07', '2023-02-22');
 
 -- --------------------------------------------------------
 
@@ -72,7 +71,6 @@ CREATE TABLE `client` (
   `Last_Name` varchar(50) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Phone` int(10) DEFAULT NULL,
-  `User_password` varchar(50) NOT NULL,
   `CIN` varchar(15) NOT NULL,
   `Country` varchar(25) NOT NULL,
   `City` varchar(25) NOT NULL,
@@ -86,24 +84,16 @@ CREATE TABLE `client` (
 -- Dumping data for table `client`
 --
 
-INSERT INTO `client` (`Client_ID`, `First_Name`, `Last_Name`, `Email`, `Phone`, `User_password`, `CIN`, `Country`, `City`, `Address`, `Password`, `Code_Postal`, `Account_Type`) VALUES
-(1, 'Jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 651782276, 'Jalil@2021', 'GM111111', 'Morocco', 'Tanger', 'Tanger-ahlan', 'Jalil@2021', '91000', 'Seller'),
-(2, 'Ibtissam', 'Berroho', 'ibtissamberroho@gmail.com', 612212211, 'zin@dial@jalil', 'GM112121', 'Morocc', '', '', '', '', ''),
-(3, 'outhman', 'moumou', 'moumou@gmail.com', 765324562, '123456789', 'HY7878383', 'Germany', 'Rachfold', '1200 , rachfol- germany', '123456789', '12000', 'Company'),
-(4, 'hamid', 'achoau', 'hamid@gmail.com', 656231453, '123456789', 'FG12345', 'spain', 'madrid', '1552 , Madrid - spain', '123456789', '12555', 'Seller'),
-(5, 'Soudian', 'elkebdani', 'soufian@gmail.com', 543215624, '123456789', 'FG42761', 'belgiaue', 'belgique', '127674 ,belgique - belgique', '123456789', '1211211', 'Seller'),
-(6, 'betroji', 'jalil', 'jaliljalilyou3@gmail.com', 651782276, 'Jalil@2021', 'HY7878383', 'Germany', 'Tanger', '2212 TANGER MOROOCO', '123456789', '91000', 'Company'),
-(7, 'Ibtissam', 'Betroji', 'betroji.jalil.solicode@gmail.com', 651782276, 'zin@dial@jalil', 'GM111111', 'Germany', 'Rachfold', '1234 GERMANY', '123456789', '12000', 'Seller'),
-(8, 'Moumou', 'moumou', 'moumoumoumou@gmail.com', 543215624, '123456789', 'FG42761', 'belgiaue', 'belgique', '123 BELGIQUE TANGER', '123456789', '1211211', 'Seller'),
-(9, 'Jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 10, '', '44444', '44444', '4444', '44444', '444', '444', 'Company'),
-(10, 'Jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 10, '', '44444', '44444', '4444', '44444', '444', '444', 'Company'),
-(11, 'ibtissam jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 545454545, '', 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$DimqI9dvihDVwPYSbVMD.OYdPyEoyVHL9KIpjHeuMaLvfhlzLzeFi', '91000', 'Company'),
-(12, 'ibtissam jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 545454545, '', 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$oz/kfGin/GgMc9GS2EDln.100PPmkG16TfYhZWkuJwZErTXf8EZB6', '91000', 'Company'),
-(13, 'ibtissam jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 545454545, '', 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$QtIlxUUVqysJGZSNbpcvxeW9BTYNhMxgDYZmdjkwPikOHLpoMUk3u', '91000', 'Company'),
-(14, 'ibtissam jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 545454545, '', 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$OS4hvSS.9epfNgxFCrr5Ee9qnJzY/Fa0axwXCFWMT/S76Rt5k/6ui', '91000', 'Company'),
-(15, 'ibtissam jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 545454545, '', 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$R4Zfw69JP.WECx4.TVgl/O.avshG1TdwsN3T.Uu8UH3vnoDeLByCW', '91000', 'Company'),
-(16, 'Jalil', 'Betroji', 'jali1l.betroji@gmail.com', 223323232, '', 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$3vYH9M8nCtquccHDnoajN.pkMKmzorSmXevK2pyMTPj7KGVhtnE8W', '444', 'Seller'),
-(17, 'Jalil', 'Betroji', 'jalil.betroji@gmail.com', 1234567890, '', 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$TqGNP/oorzVgv349RB8QaOaFq.eoq1RKIMRVTloVt8IKBlI6bgkZy', '91000', 'Seller');
+INSERT INTO `client` (`Client_ID`, `First_Name`, `Last_Name`, `Email`, `Phone`, `CIN`, `Country`, `City`, `Address`, `Password`, `Code_Postal`, `Account_Type`) VALUES
+(1, 'Jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 651782276, 'GM111111', 'Morocco', 'Tanger', 'Tanger-ahlan', 'Jalil@2021', '91000', 'Seller'),
+(3, 'outhman', 'moumou', 'moumou@gmail.com', 765324562, 'HY7878383', 'Germany', 'Rachfold', '1200 , rachfol- germany', '123456789', '12000', 'Company'),
+(4, 'hamid', 'achoau', 'hamid@gmail.com', 656231453, 'FG12345', 'spain', 'madrid', '1552 , Madrid - spain', '123456789', '12555', 'Seller'),
+(5, 'Soudian', 'elkebdani', 'soufian@gmail.com', 543215624, 'FG42761', 'belgiaue', 'belgique', '127674 ,belgique - belgique', '123456789', '1211211', 'Seller'),
+(8, 'Moumou', 'moumou', 'moumoumoumou@gmail.com', 543215624, 'FG42761', 'belgiaue', 'belgique', '123 BELGIQUE TANGER', '123456789', '1211211', 'Seller'),
+(9, 'Jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 10, '44444', '44444', '4444', '44444', '444', '444', 'Company'),
+(10, 'Jalil', 'Betroji', 'betroji.jalil.solicode@gmail.com', 10, '44444', '44444', '4444', '44444', '444', '444', 'Company'),
+(16, 'Jalil', 'Betroji', 'jali1l.betroji@gmail.com', 223323232, 'FG1212', 'Morocco', 'tanger', 'tanger ahlan solicode', '$2y$10$3vYH9M8nCtquccHDnoajN.pkMKmzorSmXevK2pyMTPj7KGVhtnE8W', '444', 'Seller'),
+(18, 'Jalil', 'Betroji', 'jalil.betroji@gmail.com', 655555555, 'FG1212', 'Morocco', 'tanger', '91000, Morocco-tanger', '$2y$10$X/T/4MjnW5pW6Xm8yovxQ.T21jIhPOz4w9ILzRTFi1xMfuO9lecMa', '91000', 'Seller');
 
 -- --------------------------------------------------------
 
@@ -123,14 +113,13 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`Image_ID`, `Announce_ID`, `Image_Path`, `Image_Type`) VALUES
-(1, 1, 'pic7.jpg', 'Primary'),
-(2, 2, 'carousel-1.jpg', 'Primary'),
-(3, 3, 'carousel-2.jpg', NULL),
-(4, 4, 'carousel-3.jpg', 'Primary'),
-(5, 5, 'carousel-4.jpg', 'primary'),
-(6, 6, 'carousel-5.jpg', 'Primary'),
-(7, 7, 'carousel-1.jpg', 'primary'),
-(8, 8, 'carousel-2.jpg', 'Primary');
+(1, 2, 'pic1.jpg', '1'),
+(9, 3, 'pic2.jpg', '1'),
+(11, 4, 'pic3.jpg', '1'),
+(12, 5, 'pic4.jpg', '1'),
+(13, 6, 'pic5.jpg', '1'),
+(14, 7, 'pic6.jpg', '1'),
+(15, 8, 'pic7.jpg', '1');
 
 --
 -- Indexes for dumped tables
@@ -170,13 +159,13 @@ ALTER TABLE `announces`
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-  MODIFY `Client_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `Client_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `Image_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Image_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables

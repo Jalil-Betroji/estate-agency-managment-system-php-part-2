@@ -5,7 +5,7 @@ if(isset($_SESSION['email'])){
     $clientEmail = $_SESSION['email'];
     $sql = "SELECT a.Client_ID , a.Last_Name, b.First_Name, a.Country ,a.Email , a.Phone , a.Account_Type,
      a.City , a.Code_Postal ,a.CIN , 'Full_Name' , concat(b.First_Name ,' ',a.Last_Name) as 'Full_Name'
-    FROM client a,client b WHERE a.Email = '$clientEmail';";
+    FROM client a,client b WHERE a.Email = b.Email AND a.Email = '$clientEmail'";
     $statment = $conn->query($sql)->fetch();
     $clientID = $statment['Client_ID'];
 

@@ -1,12 +1,18 @@
 const setting_btn = document.getElementById("setting");
+const my_announce_btn = document.getElementById("my_announce");
 
-const profile_homePage_section = document.getElementById("profile_homePage");
+const profile_homePage_section = document.getElementById("full_Announces_List");
 const Profile_section = document.getElementById("Profile");
 
 setting_btn.addEventListener("click", () => {
   Profile_section.classList.remove("profile_hide");
-
   profile_homePage_section.classList.add("profile_hide");
+});
+
+my_announce_btn.addEventListener("click", (e) => {
+  e.preventDefault();
+  Profile_section.classList.add("profile_hide");
+  profile_homePage_section.classList.remove("profile_hide");
 });
 
 const title_Validation = document.getElementById("add_Title");

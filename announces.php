@@ -5,7 +5,7 @@ if (isset($_SESSION['email'])) {
     $clientEmail = $_SESSION['email'];
     $sql = "SELECT a.Client_ID , a.Last_Name, b.First_Name, a.Country ,a.Email , a.Phone , a.Account_Type,
      a.City , a.Code_Postal ,a.CIN , 'Full_Name' , concat(b.First_Name ,' ',a.Last_Name) as 'Full_Name'
-    FROM client a,client b WHERE a.Email = b.Email;";
+    FROM client a,client b WHERE a.Email = b.Email AND a.Email = '$clientEmail'";
     $statment = $conn->query($sql)->fetch();
 }
 
@@ -283,9 +283,9 @@ if (isset($_SESSION['email'])) {
                               Image_Path
                               FROM announces INNER JOIN images ON announces.Announce_ID = images.Announce_ID 
                               WHERE Image_Type = 1";
-                                $statment = $conn->prepare($query);
-                                $statment->execute();
-                                $announces_List = $statment->fetchAll();
+                                $stmt = $conn->prepare($query);
+                                $stmt->execute();
+                                $announces_List = $stmt->fetchAll();
                                 foreach ($announces_List as $values) {
                                     ?>
                                     <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">

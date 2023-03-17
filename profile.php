@@ -3,19 +3,19 @@ require 'connect.php';
 session_start();
 
 if (isset($_SESSION['email'])) {
-  $clientEmail = $_SESSION['email'];
-  $sql = "SELECT a.Client_ID , a.Last_Name, b.First_Name, a.Country ,a.Email , a.Phone , a.Account_Type,
+    $clientEmail = $_SESSION['email'];
+    $sql = "SELECT a.Client_ID , a.Last_Name, b.First_Name, a.Country ,a.Email , a.Phone , a.Account_Type,
      a.City , a.Code_Postal ,a.CIN , 'Full_Name' , concat(b.First_Name ,' ',a.Last_Name) as 'Full_Name'
-    FROM client a,client b WHERE a.Email = '$clientEmail';";
-  $statment = $conn->query($sql)->fetch();
-  $clientID = $statment['Client_ID'];
-  $selectUserAnnounce = "SELECT announces.Announce_ID,Client_ID,Title,Area,Rooms,Bathrooms,Price,Country,City,Code_Postal,House_Number,House_Floor,Type,Category,Image_Path
+    FROM client a,client b WHERE a.Email = b.Email AND a.Email = '$clientEmail'";
+    $statment = $conn->query($sql)->fetch();
+    $clientID = $statment['Client_ID'];
+    $selectUserAnnounce = "SELECT announces.Announce_ID,Client_ID,Title,Area,Rooms,Bathrooms,Price,Country,City,Code_Postal,House_Number,House_Floor,Type,Category,Image_Path
     FROM announces
     INNER JOIN images ON announces.Announce_ID = images.Announce_ID
     WHERE Image_Type = 1 AND announces.Client_ID = '$clientID'";
-  $announces = $conn->prepare($selectUserAnnounce);
-  $announces->execute();
-  $announces_List = $announces->fetchAll();
+    $announces = $conn->prepare($selectUserAnnounce);
+    $announces->execute();
+    $announces_List = $announces->fetchAll();
 
 }
 ?>
@@ -82,12 +82,15 @@ if (isset($_SESSION['email'])) {
                     <div class="nav-item dropdown d-flex m-1">
                         <a href="#" class="nav-item"><img class="rounded-circle" style="width:4rem; height:4rem;"
                                 src="img/Review1.jpg">
-                            <span class="fw-bold"><?php echo $statment['Full_Name'] ?></span>
+                            <span class="fw-bold">
+                                <?php echo $statment['Full_Name'] ?>
+                            </span>
                         </a>
                         <div class="dropdown-menu rounded-0 m-0">
                             <a href="#add_announces" class="dropdown-item" data-bs-toggle="modal"
                                 data-bs-target="#add_announces" id="add_announce">Add Announce</a>
-                                <a href="announces.php" class="dropdown-item">Announces List</a>
+                            <a href="announces.php" class="dropdown-item">Announces List</a>
+                            <a href="#" class="dropdown-item" id="my_announce">My Announces</a>
                             <a href="#Profile" class="dropdown-item" id="setting">Setting</a>
                             <a href="logout.php" name="logout" class="dropdown-item">Log out</a>
                         </div>
@@ -99,9 +102,9 @@ if (isset($_SESSION['email'])) {
     </header>
     <!-- ============ Header Navbar End ============ -->
 
-     <!-- =========== My Full Announces List Start ============= -->
+    <!-- =========== My Full Announces List Start ============= -->
 
-     <section class="container-xxl py-5" id="full_Announces_List">
+    <section class="container-xxl py-5" id="full_Announces_List">
         <div class="container">
             <div class="row g-0 gx-5 align-items-end">
                 <div class="col-lg-6">
@@ -111,88 +114,103 @@ if (isset($_SESSION['email'])) {
                     </div>
                 </div>
                 <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
-                <form method="POST" action="profile.php">
-                 <div class="d-flex gap-2 flex-wrap">
-                    
-                    <select class="border-1 rounded select_property p-3 mb-4" name="filter_Title"> 
-                        <option selected>Filter By Title</option>
-                        <option value="get all announces">get all announces</option>
-                        <?php
-                        foreach ($announces_List as $values) {
-                          ?>
-                                                                                                      <option value="<?php echo $values['Title'] ?>"><?php echo $values['Title'] ?></option>
-                        
-                                                                                                      <?php
-                        }
-                        ?>
-                    </select>
+                    <form method="POST" action="profile.php">
+                        <div class="d-flex gap-2 flex-wrap">
 
-                    <input type="submit" name="profile_Searchbtn" class="btn btn-dark border-0 mb-4" value="Search">
+                            <select class="border-1 rounded select_property p-3 mb-4" name="filter_Title">
+                                <option selected>Filter By Title</option>
+                                <option value="get all announces">get all announces</option>
+                                <?php
+                                foreach ($announces_List as $values) {
+                                    ?>
+                                    <option value="<?php echo $values['Title'] ?>"><?php echo $values['Title'] ?></option>
 
-                 </div>
-                </form>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+
+                            <input type="submit" name="profile_Searchbtn" class="btn btn-dark border-0 mb-4"
+                                value="Search">
+
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
-                    <?php
-                    if (isset($_POST['profile_Searchbtn'])) {
-                      // ====== showing the announcements cards using while loop from search.php
-                      include 'search.php';
-                    } else {
-                      foreach ($announces_List as $values) {
-                        ?>
-                                                  <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                                                      <div class="property-item rounded overflow-hidden">
-                                                          <div class="position-relative overflow-hidden">
-                                                              <a href=""><img style="width: 22.5rem;height: 20rem;" src="img/<?php echo $values['Image_Path'] ?>" alt=""></a>
-                                                              <div
-                                                                  class="bg-color rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
-                                                                  For <?php echo $values['Category'] ?></div>
-                                                              <div
-                                                                  class="bg-white rounded-top text-color position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                                                                  <?php echo $values['Type'] ?>
-                                                              </div>
-                                                          </div>
-                                                          <div class="p-4 pb-0">
-                                                              <h5 class="text-color mb-3"><?php echo $values['Price'] ?>$</h5>
-                                                              <a class="d-block h5 mb-2" href=""><?php echo $values['Title'] ?></a>
-                                                              <p><i class="fa fa-map-marker-alt text-color me-2"></i><?php echo $values['Code_Postal'] ?> ,<?php echo $values['City'] ?>-<?php echo $values['Country'] ?></p>
-                                                          </div>
-                                                          <div class="d-flex border-top">
-                                                              <small class="flex-fill text-center border-end py-2"><i
-                                                                      class="fa fa-ruler-combined text-color me-2"></i><?php echo $values['Area'] ?> m2</small>
-                                                              <small class="flex-fill text-center border-end py-2"><i
-                                                                      class="fa fa-bed text-color me-2"></i><?php echo $values['Rooms'] ?> Bed</small>
-                                                              <small class="flex-fill text-center py-2"><i
-                                                                      class="fa fa-bath text-color me-2"></i><?php echo $values['Bathrooms'] ?> Bath</small>
-                                                          </div>
-                                                          <div class="d-flex m-2 justify-content-between">
-                                                              <button onclick="getMore_Details(<?php echo $values['Announce_ID']; ?>)" class="btn btn-primary" data-bs-toggle="modal"
-                                                                data-bs-target="#more_details_modal">
-                                                                Details</button>
-                                                              <button class="edit_info btn btn-warning" data-bs-toggle="modal"
-                                                               data-bs-target="#update_announce_modal"
-                                                               onclick="get_Details(<?php echo $values['Announce_ID'] ?>)">Update</button>
+                        <?php
+                        if (isset($_POST['profile_Searchbtn'])) {
+                            // ====== showing the announcements cards using while loop from search.php
+                            include 'search.php';
+                        } else {
+                            foreach ($announces_List as $values) {
+                                ?>
+                                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                                    <div class="property-item rounded overflow-hidden">
+                                        <div class="position-relative overflow-hidden">
+                                            <a href=""><img style="width: 22.5rem;height: 20rem;"
+                                                    src="img/<?php echo $values['Image_Path'] ?>" alt=""></a>
+                                            <div
+                                                class="bg-color rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
+                                                For <?php echo $values['Category'] ?></div>
+                                            <div
+                                                class="bg-white rounded-top text-color position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                                <?php echo $values['Type'] ?>
+                                            </div>
+                                        </div>
+                                        <div class="p-4 pb-0">
+                                            <h5 class="text-color mb-3">
+                                                <?php echo $values['Price'] ?>$
+                                            </h5>
+                                            <a class="d-block h5 mb-2" href="">
+                                                <?php echo $values['Title'] ?>
+                                            </a>
+                                            <p><i class="fa fa-map-marker-alt text-color me-2"></i>
+                                                <?php echo $values['Code_Postal'] ?> ,
+                                                <?php echo $values['City'] ?>-
+                                                <?php echo $values['Country'] ?>
+                                            </p>
+                                        </div>
+                                        <div class="d-flex border-top">
+                                            <small class="flex-fill text-center border-end py-2"><i
+                                                    class="fa fa-ruler-combined text-color me-2"></i>
+                                                <?php echo $values['Area'] ?> m2
+                                            </small>
+                                            <small class="flex-fill text-center border-end py-2"><i
+                                                    class="fa fa-bed text-color me-2"></i>
+                                                <?php echo $values['Rooms'] ?> Bed
+                                            </small>
+                                            <small class="flex-fill text-center py-2"><i class="fa fa-bath text-color me-2"></i>
+                                                <?php echo $values['Bathrooms'] ?> Bath
+                                            </small>
+                                        </div>
+                                        <div class="d-flex m-2 justify-content-between">
+                                            <button onclick="getMore_Details(<?php echo $values['Announce_ID']; ?>)"
+                                                class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#more_details_modal">
+                                                Details</button>
+                                            <button class="edit_info btn btn-warning" data-bs-toggle="modal"
+                                                data-bs-target="#update_announce_modal"
+                                                onclick="get_Details(<?php echo $values['Announce_ID'] ?>)">Update</button>
 
-                                                              <button type="button" class="btn btn-danger"
-                                                              onclick="delete_Announce(<?php echo $values['Announce_ID'] ?>)"
-                                                                  data-bs-toggle="modal"
-                                                                  data-bs-target="#DeleteModal" >Delete
-                                                              </button>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                                  <?php
-                      }
-                    }
-                    ?>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="delete_Announce(<?php echo $values['Announce_ID'] ?>)"
+                                                data-bs-toggle="modal" data-bs-target="#DeleteModal">Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
     </section>
 
-     <!-- =========================================== -->
+    <!-- =========================================== -->
     <!-- The Start of add announce Modal -->
     <!-- =========================================== -->
 
@@ -216,13 +234,15 @@ if (isset($_SESSION['email'])) {
 
                                 <div class="form-input">
                                     <p id="title_error"></p>
-                                    <input type="text" class="input-size" name="announce_Title" id="add_Title" placeholder="Title">
-      
+                                    <input type="text" class="input-size" name="announce_Title" id="add_Title"
+                                        placeholder="Title">
+
                                     <p id="rooms_error"></p>
                                     <input type="text" name="announce_Rooms" id="Rooms" placeholder="Rooms">
 
                                     <p id="price_error"></p>
-                                    <input type="number" class="input-size" name="announce_Price" id="Price" placeholder="Price">
+                                    <input type="number" class="input-size" name="announce_Price" id="Price"
+                                        placeholder="Price">
 
                                     <p id="city_error"></p>
                                     <select name="announce_City" class="input-size" id="City">
@@ -235,15 +255,16 @@ if (isset($_SESSION['email'])) {
                                     </select>
 
                                     <p id="houseNumber_error"></p>
-                                    <input type="text" class="input-size" name="announce_house_number" id="House_number" placeholder="House Number">
+                                    <input type="text" class="input-size" name="announce_house_number" id="House_number"
+                                        placeholder="House Number">
 
                                     <p id="category_error"></p>
                                     <select name="announce_Category" class="input-size" id="Category">
                                         <option value="- Select Category -" selected>
                                             - Select Category -
                                         </option>
-                                        <option value="Rent" >Rental</option>
-                                        <option value="Sell" >Sell</option>
+                                        <option value="Rent">Rental</option>
+                                        <option value="Sell">Sell</option>
                                     </select>
 
                                 </div>
@@ -251,7 +272,8 @@ if (isset($_SESSION['email'])) {
                                 <div class="form-input">
 
                                     <p id="area_error"></p>
-                                    <input type="number" class="input-size" name="announce_Area" id="Area" placeholder="Area">
+                                    <input type="number" class="input-size" name="announce_Area" id="Area"
+                                        placeholder="Area">
 
                                     <p id="bathroom_error"></p>
                                     <input type="tex" name="announce_Bathrooms" id="Bathrooms" placeholder="Bathrooms">
@@ -263,10 +285,12 @@ if (isset($_SESSION['email'])) {
                                     </select>
 
                                     <p id="codePostal_error"></p>
-                                    <input type="tex" name="announce_code_postal" id="Code_postal" placeholder="Code Postal">
+                                    <input type="tex" name="announce_code_postal" id="Code_postal"
+                                        placeholder="Code Postal">
 
                                     <p id="houseFloor_error"></p>
-                                    <input type="tex" name="announce_house_floor" id="House_floor" placeholder="House Floor">
+                                    <input type="tex" name="announce_house_floor" id="House_floor"
+                                        placeholder="House Floor">
 
                                     <p id="type_error"></p>
                                     <select name="announce_Type" id="Type">
@@ -279,7 +303,7 @@ if (isset($_SESSION['email'])) {
                                     </select>
                                 </div>
 
-                        </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
@@ -291,106 +315,110 @@ if (isset($_SESSION['email'])) {
                 </div>
             </div>
         </div>
-   </div>
+    </div>
 
-        <!-- =========================================== -->
-        <!-- The End of add announce Modal -->
-        <!-- =========================================== -->
-
-
+    <!-- =========================================== -->
+    <!-- The End of add announce Modal -->
+    <!-- =========================================== -->
 
 
-          <!-- =========================================== -->
-                         <!-- The Start of Edit Modal -->
-          <!-- =========================================== -->
 
-    <div class="modal fade" id="update_announce_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <!-- =========================================== -->
+    <!-- The Start of Edit Modal -->
+    <!-- =========================================== -->
+
+    <div class="modal fade" id="update_announce_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
                         Add New Announce
                     </h1>
-                    
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                <form id="update_announce" action="update.php" method ='GET' enctype="multipart/form-data"
-                 class="row  justify-content-center mt-5 w-100 form-input">
-                        
-                            <!-- <div class="form-box px-3"> -->
-                                <div clas="col" id="announces_Images">
-                                </div>
-                                <div clas="col">
-                                    Select image to upload:
-                                    <input type="file" name="image[]" class="border-0 pt-2" multiple="multiple">
-                                </div>
+                    <form id="update_announce" action="update.php" method='GET' enctype="multipart/form-data"
+                        class="row  justify-content-center mt-5 w-100 form-input">
 
-                                <div class="col-md-5 form-input">
-                                    <input type="hidden" name="announce_id" id="announce_id" class="w-100">
-                                    <p id="title_error"></p>
-                                    <input type="text" name="Title" id="title" placeholder="Title" class="w-100">
-      
-                                    <p id="rooms_error"></p>
-                                    <input type="text" name="Rooms" id="rooms" placeholder="Rooms" class="w-100">
+                        <!-- <div class="form-box px-3"> -->
+                        <div clas="col" id="announces_Images">
+                        </div>
+                        <div clas="col">
+                            Select image to upload:
+                            <input type="file" name="image[]" class="border-0 pt-2" multiple="multiple">
+                        </div>
 
-                                    <p id="price_error"></p>
-                                    <input type="number" name="Price" id="price" placeholder="Price" class="w-100">
+                        <div class="col-md-5 form-input">
+                            <input type="hidden" name="announce_id" id="announce_id" class="w-100">
+                            <p id="title_error"></p>
+                            <input type="text" name="Title" id="title" placeholder="Title" class="w-100">
 
-                                    <p id="city_error"></p>
-                                    <select name="City" id="city" class="w-100">
-                                        <option selected>City</option>
-                                        <option value="Tanger">Tanger</option>
-                                        <option value="Tetouan">Tetouan</option>
-                                        <option value="Casablanca">Casablanca</option>
-                                        <option value="Hociema">Hociema</option>
-                                        <option value="Rabat">Rabat</option>
-                                    </select>
+                            <p id="rooms_error"></p>
+                            <input type="text" name="Rooms" id="rooms" placeholder="Rooms" class="w-100">
 
-                                    <p id="houseNumber_error"></p>
-                                    <input type="text" name="house_number" id="house_number" placeholder="House Number" class="w-100">
+                            <p id="price_error"></p>
+                            <input type="number" name="Price" id="price" placeholder="Price" class="w-100">
 
-                                    <p id="category_error"></p>
-                                    <select name="Category" id="category" class="w-100">
-                                        <option value="- Select Category -" selected>
-                                            - Select Category -
-                                        </option>
-                                        <option value="Rent" >Rental</option>
-                                        <option value="Sell" >Sell</option>
-                                    </select>
+                            <p id="city_error"></p>
+                            <select name="City" id="city" class="w-100">
+                                <option selected>City</option>
+                                <option value="Tanger">Tanger</option>
+                                <option value="Tetouan">Tetouan</option>
+                                <option value="Casablanca">Casablanca</option>
+                                <option value="Hociema">Hociema</option>
+                                <option value="Rabat">Rabat</option>
+                            </select>
 
-                                </div>
+                            <p id="houseNumber_error"></p>
+                            <input type="text" name="house_number" id="house_number" placeholder="House Number"
+                                class="w-100">
 
-                                <div class="col-md-5 form-input">
+                            <p id="category_error"></p>
+                            <select name="Category" id="category" class="w-100">
+                                <option value="- Select Category -" selected>
+                                    - Select Category -
+                                </option>
+                                <option value="Rent">Rental</option>
+                                <option value="Sell">Sell</option>
+                            </select>
 
-                                    <p id="area_error"></p>
-                                    <input type="number" name="Area" id="area" placeholder="Area" class="w-100">
+                        </div>
 
-                                    <p id="bathroom_error"></p>
-                                    <input type="tex" name="Bathrooms" id="bathrooms" placeholder="Bathrooms" class="w-100">
+                        <div class="col-md-5 form-input">
 
-                                    <p id="country_error"></p>
-                                    <select name="Country" id="country" class="w-100">
-                                        <option selected>Country</option>
-                                        <option value="Morocco">Morocco</option>
-                                    </select>
+                            <p id="area_error"></p>
+                            <input type="number" name="Area" id="area" placeholder="Area" class="w-100">
 
-                                    <p id="codePostal_error"></p>
-                                    <input type="tex" name="code_postal" id="code_postal" placeholder="Code Postal" class="w-100">
+                            <p id="bathroom_error"></p>
+                            <input type="tex" name="Bathrooms" id="bathrooms" placeholder="Bathrooms" class="w-100">
 
-                                    <p id="houseFloor_error"></p>
-                                    <input type="tex" name="house_floor" id="house_floor" placeholder="House Floor" class="w-100">
+                            <p id="country_error"></p>
+                            <select name="Country" id="country" class="w-100">
+                                <option selected>Country</option>
+                                <option value="Morocco">Morocco</option>
+                            </select>
 
-                                    <p id="type_error"></p>
-                                    <select name="Type" id="type" class="w-100">
-                                        <option selected>Type</option>
-                                        <option value="Appartment">Appartment</option>
-                                        <option value="House">House</option>
-                                        <option value="Villa">Villa</option>
-                                        <option value="Office">Office</option>
-                                        <option value="Land">Land</option>
-                                    </select>
-                                </div>
+                            <p id="codePostal_error"></p>
+                            <input type="tex" name="code_postal" id="code_postal" placeholder="Code Postal"
+                                class="w-100">
+
+                            <p id="houseFloor_error"></p>
+                            <input type="tex" name="house_floor" id="house_floor" placeholder="House Floor"
+                                class="w-100">
+
+                            <p id="type_error"></p>
+                            <select name="Type" id="type" class="w-100">
+                                <option selected>Type</option>
+                                <option value="Appartment">Appartment</option>
+                                <option value="House">House</option>
+                                <option value="Villa">Villa</option>
+                                <option value="Office">Office</option>
+                                <option value="Land">Land</option>
+                            </select>
+                        </div>
                         <!-- </div> -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
@@ -405,160 +433,192 @@ if (isset($_SESSION['email'])) {
     </div>
 
 
-      <!-- =========================================== -->
-                <!-- The End of Edit Modal -->
-      <!-- =========================================== -->
+    <!-- =========================================== -->
+    <!-- The End of Edit Modal -->
+    <!-- =========================================== -->
 
 
 
-      <!-- =========================================== -->
-            <!-- The Start of more details Modal -->
-      <!-- =========================================== -->
+    <!-- =========================================== -->
+    <!-- The Start of more details Modal -->
+    <!-- =========================================== -->
 
-    <div class="modal fade" id="more_details_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="more_details_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">
                         Add New Announce
                     </h1>
-                    
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                
-                        
-                            <div class="row justify-content-center mt-5 w-100 form-box px-3">
-                                <div class="col"> 
-                                    <img src="" style="width:20rem;height:15rem;" id="announces_Image" alt="announce images">
-                                </div>
 
-                                <div class="col form-input">
-                                    
-                                    <label for="Title" class="px-2 w-100">Title :</label>
-                                    <input type="text" id="announce_Title" readonly class="border-primary w-100">
-                                    
-                                    <label for="Rooms" class="px-2 w-100">Rooms :</label>
-                                    <input type="text" id="announce_Rooms" readonly class="border-primary w-100">
-                                    
-                                    <label for="Bathrooms" class="px-2 w-100">Bathrooms :</label>
-                                    <input type="text" id="announce_Bathrooms" readonly class="border-primary w-100">
 
-                                    <label for="Country" class="px-2 w-100">Country :</label>
-                                    <input type="text" id="announce_Country" readonly class="border-primary w-100">
+                    <div class="row justify-content-center mt-5 w-100 form-box px-3">
+                        <div class="col">
+                            <img src="" style="width:20rem;height:15rem;" id="announces_Image" alt="announce images">
+                        </div>
 
-                                    <label for="City" class="px-2 w-100">City :</label>
-                                    <input type="text" id="announce_City" readonly class="border-primary w-100">
+                        <div class="col form-input">
 
-                                    <label for="Type" class="px-2 w-100">Type :</label>
-                                    <input type="text" id="announce_Type" readonly class="border-primary w-100">
+                            <label for="Title" class="px-2 w-100">Title :</label>
+                            <input type="text" id="announce_Title" readonly class="border-primary w-100">
 
-                                </div>
+                            <label for="Rooms" class="px-2 w-100">Rooms :</label>
+                            <input type="text" id="announce_Rooms" readonly class="border-primary w-100">
 
-                                <div class="col form-input">
+                            <label for="Bathrooms" class="px-2 w-100">Bathrooms :</label>
+                            <input type="text" id="announce_Bathrooms" readonly class="border-primary w-100">
 
-                                    <label for="Code_Postal" class="px-2 w-100">Code_Postal :</label>
-                                    <input type="text" id="announce_Postal" readonly class="border-primary w-100">
+                            <label for="Country" class="px-2 w-100">Country :</label>
+                            <input type="text" id="announce_Country" readonly class="border-primary w-100">
 
-                                    <label for="House_Number" class="px-2 w-100">House_Number :</label>
-                                    <input type="text" id="announce_House_Number" readonly class="border-primary w-100">
+                            <label for="City" class="px-2 w-100">City :</label>
+                            <input type="text" id="announce_City" readonly class="border-primary w-100">
 
-                                    <label for="House_Floor" class="px-2 w-100">House_Floor :</label>
-                                    <input type="text" id="announce_House_Floor" readonly class="border-primary w-100">
-
-                                    <label for="Area" class="px-2 w-100">Area :</label>
-                                    <input type="text" id="announce_Area" readonly class="border-primary w-100">
-
-                                    <label for="Price" class="px-2 w-100">Price :</label>
-                                    <input type="text" id="announce_Price" readonly class="border-primary w-100">
-
-                                    <label for="Category" class="px-2 w-100">Category :</label>
-                                    <input type="text" id="announce_Category" readonly class="border-primary w-100">
-
-                                    <h5></h5>
-                                </div>
+                            <label for="Type" class="px-2 w-100">Type :</label>
+                            <input type="text" id="announce_Type" readonly class="border-primary w-100">
 
                         </div>
-                        
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
-                                Cancel
-                            </button>
-                            <a href="messenger.php"><button type="button" class="btn btn-primary w-45">Contact
-                                        Announcer</button></a>
+
+                        <div class="col form-input">
+
+                            <label for="Code_Postal" class="px-2 w-100">Code_Postal :</label>
+                            <input type="text" id="announce_Postal" readonly class="border-primary w-100">
+
+                            <label for="House_Number" class="px-2 w-100">House_Number :</label>
+                            <input type="text" id="announce_House_Number" readonly class="border-primary w-100">
+
+                            <label for="House_Floor" class="px-2 w-100">House_Floor :</label>
+                            <input type="text" id="announce_House_Floor" readonly class="border-primary w-100">
+
+                            <label for="Area" class="px-2 w-100">Area :</label>
+                            <input type="text" id="announce_Area" readonly class="border-primary w-100">
+
+                            <label for="Price" class="px-2 w-100">Price :</label>
+                            <input type="text" id="announce_Price" readonly class="border-primary w-100">
+
+                            <label for="Category" class="px-2 w-100">Category :</label>
+                            <input type="text" id="announce_Category" readonly class="border-primary w-100">
+
+                            <h5></h5>
                         </div>
-                    
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <a href="messenger.php"><button type="button" class="btn btn-primary w-45">Contact
+                                Announcer</button></a>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-      <!-- =========================================== -->
-                <!-- The End of More details Modal -->
-      <!-- =========================================== -->
+    <!-- =========================================== -->
+    <!-- The End of More details Modal -->
+    <!-- =========================================== -->
 
-       <!-- =========================================== -->
-              <!-- The Start Delete Modal -->
-      <!-- =========================================== -->
+    <!-- ============ Profile Setting Start ============ -->
 
-      <div
-        class="modal fade"
-        id="DeleteModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
+    <section>
+        <form class="row justify-content-center mt-5 w-100 profile_hide" action="profileUpdate.php" method="POST"
+            id="Profile">
+            <div class="col-md-5 profile form-input">
+                <p id="First_name_error"></p>
+                <input type="text" name="first_Name" id="first_Name" value="<?php echo $statment['First_Name'] ?>"
+                    tabindex="10" required>
+
+                <p id="email_error"></p>
+                <input type="email" name="email" id="email" value="<?php echo $statment['Email'] ?>" tabindex="10"
+                    required>
+
+                <p id="Country_error"></p>
+                <input type="text" name="country" id="country" value="<?php echo $statment['Country'] ?>" required>
+
+                <p id="address_error"></p>
+                <input type="text" name="address" id="address"
+                    value="<?php echo $statment['Code_Postal'] ?>, <?php echo $statment['Country'] ?>-<?php echo $statment['City'] ?>"
+                    required>
+
+                <input type="text" name="cin" value="<?php echo $statment['CIN'] ?>" tabindex="10" required>
+            </div>
+            <div class="col-md-5 profile form-input">
+
+                <p id="Last_name_error"></p>
+                <input type="text" name="last_Name" id="last_Name" value="<?php echo $statment['Last_Name'] ?>"
+                    required>
+
+                <p id="phone_error"></p>
+                <input type="text" name="phone" id="phone" value="0<?php echo $statment['Phone'] ?>" required>
+
+                <p id="city_error"></p>
+                <input type="text" name="city" id="city" value="<?php echo $statment['City'] ?>" tabindex="10" required>
+
+                <p id="postal_error"></p>
+                <input type="text" name="code_Postal" id="code_Postal" value="<?php echo $statment['Code_Postal'] ?>"
+                    tabindex="10" required>
+
+                <p id="type_error"></p>
+                <input type="text" name="account_Type" id="account_Type" value="<?php echo $statment['Account_Type'] ?>"
+                    required>
+            </div>
+            <input type="submit" class="btn btn-warning col-md-6 container" value="Update">
+        </form>
+    </section>
+
+    <!-- ========== Profile Setting end ======== -->
+
+    <!-- =========================================== -->
+    <!-- The Start Delete Modal -->
+    <!-- =========================================== -->
+
+    <div class="modal fade" id="DeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Delete Announce
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Delete Announce
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="delete.php" method="GET">
+                        <input type="hidden" name="delete_id" id="delete_id">
+                        <div id="modal_flex">
+
+                            <h4><i class="fa-sharp fa-solid fa-trash"></i>Are you sure you want to delete this announce
+                                ?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <input type="submit" class="btn btn-danger" data-bs-dismiss="modal" value="Delete">
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="modal-body">
-              <form action="delete.php" method="GET">
-              <input type="hidden" name="delete_id" id="delete_id" >
-              <div id="modal_flex">                
-                  
-                  <h4><i class="fa-sharp fa-solid fa-trash"></i>Are you sure you want to delete this announce ?</h4> 
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-warning"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <input
-                type="submit"
-                class="btn btn-danger"
-                data-bs-dismiss="modal"
-                value="Delete"
-              >
-            </div>
-            </form>
-          </div>
         </div>
-      </div>
 
-      <!-- =========================================== -->
-              <!-- The End Delete Modal -->
-      <!-- =========================================== -->
+        <!-- =========================================== -->
+        <!-- The End Delete Modal -->
+        <!-- =========================================== -->
 
-    <!-- =========== My Full Announces List End ============= -->
+        <!-- =========== My Full Announces List End ============= -->
 
 
         <!-- Template Javascript -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="js/profile.js"></script>
-       
+
 </body>
 
 </html>
